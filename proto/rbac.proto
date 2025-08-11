@@ -1,0 +1,232 @@
+syntax = "proto3";
+
+package rbac;
+
+import "google/api/annotations.proto";
+
+option go_package = "my-gRPC/api;api";
+
+message UserInfo {
+  string username = 1;
+  repeated string roles = 2;
+}
+
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string token = 1;
+}
+
+message RegisterRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message RegisterResponse {
+  string message = 1;
+}
+
+message ListUsersRequest {}
+
+message ListUsersResponse {
+  repeated UserInfo users = 1;
+}
+
+message GetUserRolesRequest {
+  string userId = 1;
+}
+
+message GetUserRolesResponse {
+  repeated string roles = 1;
+}
+
+message CheckPermissionRequest {
+  string userId = 1;
+  string permission = 2;
+}
+
+message CheckPermissionResponse {
+  bool allowed = 1;
+}
+
+message CreatePermissionRequest {
+  string name = 1;
+  string description = 2;
+}
+
+message CreatePermissionResponse {
+  uint32 id = 1;
+}
+
+message ListPermissionsRequest {}
+
+message ListPermissionsResponse {
+  repeated PermissionInfo permissions = 1;
+}
+
+message PermissionInfo {
+  uint32 id = 1;
+  string name = 2;
+  string description = 3;
+}
+
+message CreateRoleRequest {
+  string name = 1;
+  string description = 2;
+}
+
+message CreateRoleResponse {
+  string message = 1;
+  uint32 roleId = 2;
+}
+
+message AssignPermissionsRequest {
+  uint32 roleId = 1;
+  repeated uint32 permissionIds = 2;
+}
+
+message AssignPermissionsResponse {
+  string message = 1;
+}
+
+message GetRolePermissionsRequest {
+  uint32 roleId = 1;
+}
+
+message GetRolePermissionsResponse {
+  repeated PermissionInfo permissions = 1;
+}
+
+message CreateUserRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message CreateUserResponse {
+  string message = 1;
+  uint32 userId = 2;
+}
+
+message UpdateUserRequest {
+  uint32 userId = 1;
+  string username = 2;
+  string password = 3;
+}
+
+message UpdateUserResponse {
+  string message = 1;
+}
+
+message DeleteUserRequest {
+  uint32 userId = 1;
+}
+
+message DeleteUserResponse {
+  string message = 1;
+}
+
+message GetUserRequest {
+  uint32 userId = 1;
+}
+
+message GetUserResponse {
+  string username = 1;
+  repeated string roles = 2;
+}
+
+// ========== Service ==========
+service RBACService {
+  rpc Login(LoginRequest) returns (LoginResponse) {
+    option (google.api.http) = {
+      post: "/v1/login"
+      body: "*"
+    };
+  }
+
+  rpc Register(RegisterRequest) returns (RegisterResponse) {
+    option (google.api.http) = {
+      post: "/v1/register"
+      body: "*"
+    };
+  }
+
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {
+    option (google.api.http) = {
+      get: "/v1/users"
+    };
+  }
+
+  rpc GetUserRoles(GetUserRolesRequest) returns (GetUserRolesResponse) {
+    option (google.api.http) = {
+      get: "/v1/users/{userId}/roles"
+    };
+  }
+
+  rpc CheckPermission(CheckPermissionRequest) returns (CheckPermissionResponse) {
+    option (google.api.http) = {
+      get: "/v1/users/{userId}/permissions/{permission}"
+    };
+  }
+
+  rpc CreatePermission(CreatePermissionRequest) returns (CreatePermissionResponse) {
+    option (google.api.http) = {
+      post: "/v1/permissions"
+      body: "*"
+    };
+  }
+
+  rpc ListPermissions(ListPermissionsRequest) returns (ListPermissionsResponse) {
+    option (google.api.http) = {
+      get: "/v1/permissions"
+    };
+  }
+
+  rpc CreateRole(CreateRoleRequest) returns (CreateRoleResponse) {
+    option (google.api.http) = {
+      post: "/v1/roles"
+      body: "*"
+    };
+  }
+
+  rpc AssignPermissions(AssignPermissionsRequest) returns (AssignPermissionsResponse) {
+    option (google.api.http) = {
+      post: "/v1/roles/{roleId}/permissions"
+      body: "*"
+    };
+  }
+
+  rpc GetRolePermissions(GetRolePermissionsRequest) returns (GetRolePermissionsResponse) {
+    option (google.api.http) = {
+      get: "/v1/roles/{roleId}/permissions"
+    };
+  }
+
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {
+    option (google.api.http) = {
+      post: "/v1/users"
+      body: "*"
+    };
+  }
+
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {
+    option (google.api.http) = {
+      put: "/v1/users/{userId}"
+      body: "*"
+    };
+  }
+
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {
+    option (google.api.http) = {
+      delete: "/v1/users/{userId}"
+    };
+  }
+
+  rpc GetUser(GetUserRequest) returns (GetUserResponse) {
+    option (google.api.http) = {
+      get: "/v1/users/{userId}"
+    };
+  }
+}

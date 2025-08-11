@@ -1,0 +1,7 @@
+version: v1beta1
+name: buf.build/grpc-rbac-backend/proto-service
+deps:
+  - buf.build/googleapis/googleapis
+build:
+  roots:
+    - proto
