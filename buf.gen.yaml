@@ -17,3 +17,14 @@ plugins:
     opt:
       - json_names_for_fields=true
       - logtostderr=true
+  # TypeScript 相关插件
+  - name: ts
+    out: api/ts
+    opt:
+      - target=ts
+      - esModuleInterop=true
+  - name: grpc-web
+    out: api/ts
+    opt:
+      - import_style=typescript
+      - mode=grpcweb
